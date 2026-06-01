@@ -53,12 +53,46 @@
 <script src="app.js"></script>
 
 <script>
-// Register service worker. The relative path matters for GitHub Pages.
+// Service worker policy.
+//
+// We only want a service worker when the app is being served from a real
+// HTTPS host (e.g. GitHub Pages), because that's when it provides offline
+// support and makes the app installable as a PWA.
+//
+// When the app runs from localhost, file://, or inside an editor's webview
+// (Spck, etc.), an active service worker can intercept fetches against the
+// wrong origin and stall the whole app. So in those environments we both
+// skip registration AND aggressively unregister any worker that's already
+// installed, plus delete its caches.
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch((err) => {
-      console.warn('SW registration failed:', err);
-    });
+  const host = location.hostname;
+  const isHttpsHost =
+    location.protocol === 'https:' &&
+    host !== 'localhost' &&
+    host !== '127.0.0.1' &&
+    host !== '0.0.0.0';
+
+  window.addEventListener('load', async () => {
+    if (isHttpsHost) {
+      // Real deployment — register normally.
+      try {
+        await navigator.serviceWorker.register('sw.js');
+      } catch (err) {
+        console.warn('SW registration failed:', err);
+      }
+    } else {
+      // Local / editor preview — make sure no stale SW is hijacking requests.
+      try {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const r of regs) await r.unregister();
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((k) => caches.delete(k)));
+        }
+      } catch (err) {
+        console.warn('SW cleanup failed:', err);
+      }
+    }
   });
 }
 </script>

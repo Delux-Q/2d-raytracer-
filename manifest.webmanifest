@@ -1,4 +1,5 @@
 {
+  "id": "/raytracer/",
   "name": "2D Ray Tracer",
   "short_name": "RayTracer",
   "description": "Interactive 2D single-ray tracer with refraction, total internal reflection, and kill zones.",
