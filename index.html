@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>2D Ray Tracer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <div id="toolbar">
+    <div class="tool-row">
+      <button id="btnAddBox" class="tool-btn">+ Box</button>
+      <button id="btnAddKill" class="tool-btn">+ Kill</button>
+      <button id="btnDeleteBox" class="tool-btn" disabled>Delete</button>
+      <button id="btnReset" class="tool-btn">Reset</button>
+    </div>
+
+    <div class="tool-row sel-row" id="selPanel" hidden>
+      <label>n = <input type="number" id="selN" min="1.0" max="4.0" step="0.01" value="1.50"></label>
+      <input type="range" id="selNRange" min="1.0" max="4.0" step="0.01" value="1.50">
+    </div>
+
+    <div class="tool-row info-row">
+      <span id="rayInfo">Ray: drag the yellow dot to move, the arrow tip to aim</span>
+    </div>
+  </div>
+
+  <div id="canvasWrap">
+    <canvas id="canvas"></canvas>
+    <button id="fitBtn">Fit</button>
+    <div id="zoomBadge">100%</div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
